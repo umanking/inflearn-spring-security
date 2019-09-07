@@ -67,25 +67,28 @@ public class AccountControllerTest {
     @Test
     @Transactional
     public void form_login_success_test() throws Exception {
-        Account account = createAccount();
+        String username = "andrew";
+        String password = "123";
+        Account account = createAccount(username, password);
 
-        mockMvc.perform(formLogin().user(account.getUsername()).password("123"))
+        mockMvc.perform(formLogin().user(username).password(password))
                 .andExpect(authenticated());
     }
 
     @Test
     @Transactional
     public void form_login_fail_test() throws Exception {
-        Account account = createAccount();
-
+        String username = "andrew";
+        String password = "123";
+        Account account = createAccount(username, password);
         mockMvc.perform(formLogin().user(account.getUsername()).password("12344"))
                 .andExpect(unauthenticated());
     }
 
-    private Account createAccount() {
+    private Account createAccount(String username, String password) {
         Account account = new Account();
-        account.setUsername("andrew");
-        account.setPassword("123");
+        account.setUsername(username);
+        account.setPassword(password);
         account.setRole("USER");
 
         return accountService.createAccount(account);
