@@ -8,9 +8,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.Assert.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -22,6 +27,9 @@ public class AccountControllerTest {
 
     @Autowired
     MockMvc mockMvc;
+
+    @Autowired
+    private AccountService accountService;
 
     @Test
     public void index() throws Exception {
@@ -40,5 +48,46 @@ public class AccountControllerTest {
         mockMvc.perform(get("/"))
                 .andDo(print())
                 .andExpect(status().isOk());
+    }
+    @Test
+    @WithMockUser(username = "admin", roles = "ADMIN")
+    public void adminPage_mockUser_success() throws Exception {
+        mockMvc.perform(get("/admin"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+    @Test
+    @WithMockUser(username = "admin", roles = "USER")
+    public void adminPage_mockUser_fail_test() throws Exception {
+        mockMvc.perform(get("/admin"))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Transactional
+    public void form_login_success_test() throws Exception {
+        Account account = createAccount();
+
+        mockMvc.perform(formLogin().user(account.getUsername()).password("123"))
+                .andExpect(authenticated());
+    }
+
+    @Test
+    @Transactional
+    public void form_login_fail_test() throws Exception {
+        Account account = createAccount();
+
+        mockMvc.perform(formLogin().user(account.getUsername()).password("12344"))
+                .andExpect(unauthenticated());
+    }
+
+    private Account createAccount() {
+        Account account = new Account();
+        account.setUsername("andrew");
+        account.setPassword("123");
+        account.setRole("USER");
+
+        return accountService.createAccount(account);
     }
 }
