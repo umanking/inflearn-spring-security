@@ -13,7 +13,9 @@ public class SampleService {
 
     public void dashboard() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         User principal = (User) authentication.getPrincipal();
+
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
     }
 }
