@@ -1,5 +1,7 @@
 package com.example.demo.form;
 
+import com.example.demo.account.Account;
+import com.example.demo.account.AccountContext;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,10 +14,8 @@ import java.util.Collection;
 public class SampleService {
 
     public void dashboard() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        User principal = (User) authentication.getPrincipal();
-
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        Account account = AccountContext.getAccount();
+        System.out.println("====================");
+        System.out.println(account.getUsername());
     }
 }
