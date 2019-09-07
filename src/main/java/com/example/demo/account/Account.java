@@ -1,5 +1,6 @@
 package com.example.demo.account;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import sun.util.resources.it.CurrencyNames_it;
 
 import javax.persistence.Column;
@@ -48,5 +49,9 @@ public class Account {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public void encodePassword(PasswordEncoder passwordEncoder) {
+        this.password = passwordEncoder.encode(this.password);
     }
 }
