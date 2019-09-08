@@ -18,6 +18,7 @@ public class SampleService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         System.out.println("====================");
+        System.out.println(authentication);
         System.out.println(userDetails.getUsername());
     }
 }
