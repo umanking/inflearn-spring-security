@@ -56,7 +56,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
 
-                http.formLogin();
+                http.formLogin()
+                .loginPage("/login")
+                .permitAll()
+                ;
                 http.httpBasic();
     }
 }

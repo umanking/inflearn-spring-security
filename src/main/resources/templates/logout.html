@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>logout</title>
+</head>
+<body>
+<h1>logout</h1>
+<div th:if="${param.error}">
+    Invalid username or password
+</div>
+<form action="/logout" method="post" th:action="@{/logout}">
+    <p><input type="submit" value="logout"></p>
+</form>
+</body>
+</html>
